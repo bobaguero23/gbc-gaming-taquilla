@@ -4,6 +4,7 @@ import config from 'config';
 import jwtDecode from 'jwt-decode';
 
 import { getDynamicConfig } from './dynamicConfig';
+import { isGbcGaming } from './product';
 import QueryCache from './queryCache';
 
 export default class HandlerGraph {
@@ -17,6 +18,10 @@ export default class HandlerGraph {
     const headers = {
       'Content-Type': 'application/json',
     };
+
+    if (isGbcGaming()) {
+      headers['x-taquilla-client'] = 'gbc';
+    }
 
     if (empty(localStorage.getItem('token'))) {
       headers.sessionId = localStorage.getItem('recaptcha');

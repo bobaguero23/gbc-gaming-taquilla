@@ -1,6 +1,7 @@
 const { app, BrowserWindow, BrowserView, ipcMain, safeStorage, dialog, Menu, session } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const http = require('http');
 const { autoUpdater } = require('electron-updater');
 
 // Use app.isPackaged instead of electron-is-dev for reliable detection
@@ -27,6 +28,90 @@ function productInfo() {
 let mainWindow;
 let activeViews = {}; // { hostname: BrowserView }
 let activeHostname = null;
+let gbcStartUrl = null;
+
+function contentTypeFor(filePath) {
+    if (filePath.endsWith('.html')) return 'text/html; charset=utf-8';
+    if (filePath.endsWith('.js')) return 'application/javascript; charset=utf-8';
+    if (filePath.endsWith('.css')) return 'text/css; charset=utf-8';
+    if (filePath.endsWith('.json')) return 'application/json; charset=utf-8';
+    if (filePath.endsWith('.svg')) return 'image/svg+xml';
+    if (filePath.endsWith('.png')) return 'image/png';
+    if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) return 'image/jpeg';
+    if (filePath.endsWith('.gif')) return 'image/gif';
+    if (filePath.endsWith('.woff2')) return 'font/woff2';
+    if (filePath.endsWith('.woff')) return 'font/woff';
+    if (filePath.endsWith('.ttf')) return 'font/ttf';
+    if (filePath.endsWith('.ico')) return 'image/x-icon';
+    return 'application/octet-stream';
+}
+
+function ensureGbcServer() {
+    if (!isGbcProduct() || isDev) return Promise.resolve();
+    if (gbcStartUrl) return Promise.resolve();
+
+    const root = path.resolve(__dirname, '../dist');
+    return new Promise((resolve, reject) => {
+        const server = http.createServer((req, res) => {
+            let urlPath = '/';
+            try {
+                urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
+            } catch (e) {
+                res.writeHead(400);
+                res.end();
+                return;
+            }
+            if (urlPath.indexOf('\0') !== -1) {
+                res.writeHead(400);
+                res.end();
+                return;
+            }
+            const relative = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
+            const filePath = path.resolve(root, relative);
+            const rootWithSep = root.endsWith(path.sep) ? root : root + path.sep;
+            if (filePath !== root && !filePath.startsWith(rootWithSep)) {
+                res.writeHead(403);
+                res.end();
+                return;
+            }
+            fs.readFile(filePath, (err, data) => {
+                const send = (body, type) => {
+                    res.writeHead(200, { 'Content-Type': type });
+                    res.end(body);
+                };
+                if (!err) {
+                    send(data, contentTypeFor(filePath));
+                    return;
+                }
+                fs.readFile(path.join(root, 'index.html'), (fallbackErr, html) => {
+                    if (fallbackErr) {
+                        res.writeHead(404);
+                        res.end();
+                        return;
+                    }
+                    send(html, 'text/html; charset=utf-8');
+                });
+            });
+        });
+        server.listen(0, '127.0.0.1', () => {
+            const port = server.address().port;
+            gbcStartUrl = `http://localhost:${port}/index.html`;
+            resolve();
+        });
+        server.on('error', reject);
+    });
+}
+
+function checkGbcUpdates() {
+    if (isDev || !isGbcProduct()) return;
+    autoUpdater.setFeedURL({
+        provider: 'github',
+        owner: 'bobaguero23',
+        repo: 'gbc-gaming-taquilla',
+        private: false,
+    });
+    autoUpdater.checkForUpdatesAndNotify();
+}
 
 // ── Agencies Config (persisted to disk) ────────────────────────────
 const agenciesPath = path.join(app.getPath('userData'), 'agencies.json');
@@ -86,7 +171,7 @@ function getContentBounds() {
 function createViewForHostname(hostname) {
     const startUrl = isDev
         ? 'http://localhost:8080'
-        : `file://${path.join(__dirname, '../dist/index.html')}`;
+        : (gbcStartUrl || `file://${path.join(__dirname, '../dist/index.html')}`);
 
     const partitionName = `persist:${hostname}`;
 
@@ -256,10 +341,10 @@ function createWindow() {
             switchToView(agencies[0]);
         }
 
-        // Check for updates (production only)
-        if (!isDev) {
+        // Check for updates (production only, GBC)
+        if (!isDev && isGbcProduct()) {
             setTimeout(() => {
-                /* sin servidor de actualizaciones */
+                checkGbcUpdates();
             }, 3000);
         }
     });
@@ -376,7 +461,7 @@ function buildAppMenu() {
                     label: 'Buscar Actualización...',
                     click: () => {
                         console.log('[Menu] Manual update check requested');
-                        /* sin servidor de actualizaciones */
+                        checkGbcUpdates();
                     }
                 }
             ]
@@ -388,8 +473,14 @@ function buildAppMenu() {
 }
 
 app.on('ready', () => {
-    buildAppMenu();
-    createWindow();
+    ensureGbcServer().then(() => {
+        buildAppMenu();
+        createWindow();
+    }).catch((err) => {
+        console.error('[GBC] No se pudo abrir el origen local del captcha', err);
+        buildAppMenu();
+        createWindow();
+    });
 });
 
 app.on('window-all-closed', () => {
@@ -601,7 +692,7 @@ ipcMain.on('restart_app', () => {
 
 // Renderer can request a manual update check
 ipcMain.on('check_for_updates', () => {
-    /* sin servidor de actualizaciones */
+    checkGbcUpdates();
 });
 
 // Expose the app version to the renderer

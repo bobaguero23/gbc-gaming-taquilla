@@ -1,6 +1,7 @@
 import empty from 'is-empty';
 import HandlerGraph from '../_helpers/HandlerGraphql';
 import { getDynamicConfig } from '../_helpers/dynamicConfig';
+import { isGbcGaming } from '../_helpers/product';
 
 class AuthService {
   static async login({ token, macAddress, geoLocation, ipAddress, publicIpAddress } = {}) {
@@ -57,6 +58,10 @@ class AuthService {
   static async loginUserPass({ username, password, macAddress, geoLocation, ipAddress, publicIpAddress }) {
     const { hostname } = getDynamicConfig();
 
+    if (isGbcGaming()) {
+      return AuthService._loginUserPassV2({ username, password, hostname, macAddress, geoLocation, ipAddress, publicIpAddress });
+    }
+
     try {
       return await AuthService._loginUserPassV2({ username, password, hostname, macAddress, geoLocation, ipAddress, publicIpAddress });
     } catch (e) {
@@ -69,13 +74,13 @@ class AuthService {
     const query = `mutation {
             procAuthenticateJwtTokenUserPassMacGeoV2(input: 
               {
-                pEmail: "${username}"
-                pPassword: "${password}"
-                pSubdomain: "${hostname}"
-                pMacAddress: "${macAddress || ''}"
-                pGeoLocation: "${geoLocation || ''}"
-                pIpAddress: "${ipAddress || ''}"
-                pPublicIpAddress: "${publicIpAddress || ''}"
+                pEmail: ${JSON.stringify(String(username || ''))}
+                pPassword: ${JSON.stringify(String(password || ''))}
+                pSubdomain: ${JSON.stringify(String(hostname || ''))}
+                pMacAddress: ${JSON.stringify(String(macAddress || ''))}
+                pGeoLocation: ${JSON.stringify(String(geoLocation || ''))}
+                pIpAddress: ${JSON.stringify(String(ipAddress || ''))}
+                pPublicIpAddress: ${JSON.stringify(String(publicIpAddress || ''))}
               }) {
               jwtTokenToken
             }

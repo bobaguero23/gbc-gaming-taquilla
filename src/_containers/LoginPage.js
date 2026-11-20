@@ -158,12 +158,12 @@ class LoginPage extends React.Component {
   }
 
   async onLoadRecaptcha() {
-    // Skip reCAPTCHA in Electron desktop app (file:// protocol is not valid for Google reCAPTCHA)
-    if (this.isElectronApp()) {
+    // La taquilla INH instalada sigue con el atajo. GBC no: el servidor tiene que ver un captcha real.
+    if (this.isElectronApp() && !isGbcGaming()) {
       localStorage.setItem('recaptcha', 'electron-desktop');
       return;
     }
-    const recaptcha = await load('');
+    const recaptcha = await load('6LdQg8YUAAAAAHGf-V_iA6lRn-gEXFwqT66cfe8s');
     const recaptchaToken = await recaptcha.execute('login');
     localStorage.setItem('recaptcha', recaptchaToken);
   }

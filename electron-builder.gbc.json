@@ -56,6 +56,20 @@
     "node_modules/esprima/**/*",
     "node_modules/sprintf-js/**/*"
   ],
+  "extraResources": [
+    {
+      "from": "public/app-update.gbc.yml",
+      "to": "app-update.yml"
+    }
+  ],
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "bobaguero23",
+      "repo": "gbc-gaming-taquilla",
+      "private": false
+    }
+  ],
   "win": {
     "target": ["nsis"]
   },

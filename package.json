@@ -3,7 +3,7 @@
   "description": "GBC Gaming - taquilla de Ganador",
   "author": "GBC Gaming",
   "homepage": "",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "scripts": {
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && rimraf dist && webpack --config webpack.config.prod.js",
@@ -75,7 +75,21 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "extraResources": [
+      {
+        "from": "public/app-update.gbc.yml",
+        "to": "app-update.yml"
+      }
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "bobaguero23",
+        "repo": "gbc-gaming-taquilla",
+        "private": false
+      }
+    ]
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.15",

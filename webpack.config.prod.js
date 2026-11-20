@@ -34,11 +34,11 @@ module.exports = merge(common, {
   externals: {
     // global app config object
     config: JSON.stringify({
-      apiUrl: '',
-      apiUrlRT: '',
-      apiUrlRTSports: '',
-      apiUrlBackEnd: '',
-      API_CASIER_RT_V2: '',
+      apiUrl: 'https://apisellertaquilla.betpredator.com/apiseller',
+      apiUrlRT: 'https://apisellertaquillart.betpredator.io/apiseller',
+      apiUrlRTSports: 'https://apisports-office.betpredator.com/apisports',
+      apiUrlBackEnd: 'https://apisellertaquilla.betpredator.com',
+      API_CASIER_RT_V2: 'wss://wshorses.betpredator.com',
       value5y6VES: 20,
       valueUnitsVES: 36,
     }),

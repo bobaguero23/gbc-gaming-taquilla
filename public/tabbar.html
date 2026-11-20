@@ -116,9 +116,9 @@
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <h3>Agregar Agencia</h3>
-            <p class="subtitle">Ingrese la dirección web de la agencia</p>
-            <input type="text" id="hostInput" placeholder="Ejemplo: agencia.ejemplo.com">
-            <div class="error-msg" id="errorMsg">Dominio no válido (ej: agencia.taquillafisica.com)</div>
+            <p class="subtitle" id="modalSubtitle">Ingrese el código de la taquilla</p>
+            <input type="text" id="hostInput" placeholder="Ejemplo: 4l-1usd">
+            <div class="error-msg" id="errorMsg">Código no válido. Use letras, números y guiones, por ejemplo 4l-1usd.</div>
             <div class="domain-help" id="domainHelp">
                 <span class="pro">.pro</span> = Venta a Ganador &nbsp;|&nbsp;
                 <span class="inh">.app .bet .com .io</span> = INH - 5 y 6
@@ -173,7 +173,7 @@
         let gbcProduct = false;
 
         const allowedDomainsRegex = /^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
-        const gbcHostRegex = /^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+        const gbcHostRegex = /^(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/;
 
         function applyProduct(info) {
             gbcProduct = !!(info && info.gbc);
@@ -181,10 +181,14 @@
             const help = document.getElementById('domainHelp');
             const input = document.getElementById('hostInput');
             if (gbcProduct && help) {
-                help.textContent = 'Host de la agencia GBC Gaming. Esta taquilla vende sólo Ganador.';
+                help.textContent = 'Código de la taquilla, sin dominio. Por ejemplo 4l-1usd.';
             }
             if (gbcProduct && input) {
-                input.placeholder = 'Ejemplo: agencia.ejemplo.com';
+                input.placeholder = 'Ejemplo: 4l-1usd';
+            }
+            const subtitle = document.getElementById('modalSubtitle');
+            if (gbcProduct && subtitle) {
+                subtitle.textContent = 'Ingrese el código de la taquilla';
             }
             renderTabs();
         }
@@ -253,7 +257,8 @@
         }
 
         function validateAndAdd() {
-            let host = hostInput.value.trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+            let host = hostInput.value.trim().replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/;+$/, '');
+            if (gbcProduct) host = host.toLowerCase();
             const validHost = gbcProduct ? gbcHostRegex.test(host) : allowedDomainsRegex.test(host);
             if (!host || !validHost) {
                 errorMsg.style.display = 'block';

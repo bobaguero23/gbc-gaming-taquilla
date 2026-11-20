@@ -17,8 +17,8 @@ class SetupPage extends React.Component {
         // Register custom validation rule
         ValidatorForm.addValidationRule('isAllowedDomain', (value) => {
             if (!value) return true; // Let 'required' handle empty
-            let host = value.replace(/^https?:\/\//, '').replace(/\/$/, '');
-            const allowedDomainsRegex = /^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+            let host = value.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/;+$/, '').toLowerCase();
+            const allowedDomainsRegex = /^(?=.{1,253}$)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*$/;
             return allowedDomainsRegex.test(host);
         });
 
@@ -75,7 +75,7 @@ class SetupPage extends React.Component {
                                 <h3>Configuración Inicial</h3>
                             </div>
                             <div className="card-body">
-                                <p>Por favor, ingrese la dirección web de su agencia.</p>
+                                <p>Ingrese el código de la taquilla, sin dominio.</p>
                                 <ValidatorForm onSubmit={this.handleSubmit}>
                                     <div className="form-group">
                                         <TextValidator
@@ -83,9 +83,9 @@ class SetupPage extends React.Component {
                                             name="agencyUrl"
                                             value={this.state.agencyUrl}
                                             validators={['required', 'isAllowedDomain']}
-                                            errorMessages={['Este campo es requerido', 'Dominio no válido (ej: agencia.)']}
+                                            errorMessages={['Este campo es requerido', 'Código no válido (ej: 4l-1usd)']}
                                             className="form-control"
-                                            placeholder="Ejemplo: agencia."
+                                            placeholder="Ejemplo: 4l-1usd"
                                         />
                                     </div>
                                     <div className="form-group">

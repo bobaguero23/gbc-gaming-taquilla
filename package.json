@@ -3,7 +3,7 @@
   "description": "GBC Gaming - taquilla de Ganador",
   "author": "GBC Gaming",
   "homepage": "",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "scripts": {
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && rimraf dist && webpack --config webpack.config.prod.js",

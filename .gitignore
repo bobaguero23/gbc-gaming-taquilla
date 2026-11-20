@@ -1,0 +1,17 @@
+node_modules/
+dist/
+dist-gbc/
+*.log
+.DS_Store
+.agent/
+old/
+nbproject/
+sqls/
+scripts/
+.firebaserc
+firebase.json
+deploy.sh
+Dockerfile
+nginx.conf
+cloudbuild.yaml
+cloudbuild-start.sh

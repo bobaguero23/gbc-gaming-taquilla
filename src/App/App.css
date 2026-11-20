@@ -1,0 +1,765 @@
+/*!
+ * Custom
+ */
+
+/*Globals*/
+* {
+    font-size: 13px;
+}
+
+h1,
+h2,
+h3 {
+    color: #fa711e;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+h3 {
+    font-size: 1em;
+}
+
+a {
+    color: #fa711e;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+.fl {
+    float: left;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+
+.mr-10 {
+    margin-right: 10px;
+}
+
+.mw-400 {
+    width: 400px;
+}
+
+.breadcrumb {
+    background: #fbfbfb;
+    margin-top: 1em;
+}
+
+.breadcrumb a {
+    color: #7b00b3;
+    font-size: 0.9em;
+}
+
+.contentPage {
+    padding: 0.5em 2em;
+}
+
+.validation-error,
+form .help-block {
+    color: #d00707;
+    font-size: 0.9em;
+    padding: 0.5em 0.2em;
+}
+
+#app .container {
+    border: 1px solid #f1f1f1;
+    padding: 0;
+    padding-bottom: 1em;
+    border-radius: 0em 0em 1em 1em;
+    min-height: 600px;
+    border-top: 0;
+    max-width: 98%;
+}
+
+#app .content-center {
+    border: 1px solid #f8f9fa;
+    min-height: 600px;
+    border-bottom: 0;
+}
+
+.btn.btn-sell {
+    width: 100%;
+    height: 38px;
+}
+
+.block-payrefund {
+    padding: 1em 0;
+    background: #d6d6d617;
+    border: 1px solid #ececec;
+    border-radius: 1em;
+    margin: 1.3em 0;
+}
+
+.block-sell-form {
+    background: #fcfcfc;
+    padding: 1em 0;
+    margin-bottom: 1em;
+    border: 1px solid #f0f0f0;
+    border-radius: 0.7em;
+    margin-top: 1em;
+}
+
+.block-next-races {
+    padding: 1em;
+    background: #a8d4ff24;
+}
+
+
+.btn.btn-primary {
+    background: #fa711e;
+    border-color: #fa711e;
+}
+
+.loading-overlay {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(218, 218, 218, 0.5);
+    z-index: 9999;
+}
+
+.loading-overlay.noshow {
+    display: none;
+}
+
+.loading-wheel {
+    position: absolute;
+    top: 48%;
+    left: 48%;
+}
+
+div#wrapper {
+    min-height: 600px;
+}
+
+.nav-center-name {
+    padding-top: 0.7em;
+    padding-right: 1em;
+}
+
+
+/* Pagination */
+
+.table-container {
+    margin-top: 1em;
+}
+
+.pagination-toolbar {
+    padding: 1em 0;
+}
+
+.pagination-toolbar .btn {
+    margin-right: 0.5em;
+    font-size: 0.8em;
+}
+
+.pagination-toolbar .btn-pagination-first {
+    background: #fff;
+    color: #6f6d6d;
+    border-color: #ccc;
+
+}
+
+.pagination-toolbar .btn-pagination-last {
+    background: #fff;
+    color: #6f6d6d;
+    border-color: #ccc;
+
+}
+
+.pagination-toolbar .btn-pagination-number {
+
+    background: #fff;
+    color: #6f6d6d;
+    border-color: #ccc;
+}
+
+.table {
+    font-size: 0.8em;
+    border-right: 1px solid #dce2e6;
+    border-left: 1px solid #dce2e6;
+    border-bottom: 1px solid #dce2e6;
+}
+
+/* LoginPage */
+.LoginPage {
+    margin-top: 4em;
+    border: solid #f8f9fa;
+    padding: 2em;
+}
+
+.logo-content {
+    border-bottom: 4px solid #f8f9fa;
+}
+
+img.loginLogo {
+    width: 50%;
+    height: auto;
+    margin-bottom: 1em;
+}
+
+.LoginPage form {
+    margin-top: 1em;
+}
+
+.LoginPage form .loginButton {
+    width: 100%;
+    padding: 1em;
+}
+
+/* EndLoginPage */
+
+/* Form Classes */
+
+.formTitle {
+    width: 100%;
+    text-align: center;
+    padding: 0.5em;
+    color: #5d0088;
+}
+
+form .form-control {
+    padding: 1.5em 1em;
+    font-size: 0.9em;
+}
+
+form select.form-control {
+    height: 37px;
+    padding: 0 0 0 10px;
+}
+
+.filterForm {
+    padding: 1em;
+    background: #f8f9fa;
+    padding-top: 2em;
+    padding-bottom: 0;
+}
+
+.filterForm .filter-form-button {
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+
+.filterForm .filter-form-button.mt0 {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.react-datepicker-wrapper {
+    display: inline-block;
+    width: 100%;
+}
+
+.react-datepicker__input-container {
+    width: 100%;
+}
+
+span.units-help {
+    font-size: 11px;
+    color: #737373;
+    padding-left: 2em;
+}
+
+span.timeRace {
+    width: 100%;
+    float: left;
+    padding: 1em;
+}
+
+.form-check-inline {
+    margin-right: 0.6rem;
+    margin-top: 0.8rem;
+}
+
+.form-check-inline .form-check-input {
+    position: static;
+    margin-top: 0;
+    margin-right: .3125rem;
+    margin-left: 0;
+    transform: scale(1.4);
+}
+
+
+/* End Form Classes */
+
+/* Dashboard */
+
+.table.tableMovements td,
+.table.tableMovements th {
+    font-size: 11px;
+}
+
+.dashboard .centerHeader {
+    padding: 1em;
+}
+
+.dashboard .card-body {
+    overflow: auto;
+    height: 450px;
+}
+
+.dashboard .container-deposit {
+    float: right
+}
+
+.dashboard .btn-deposit {
+    width: 50px;
+    margin-top: -40px;
+}
+
+
+.dashboard span.pagination-records {
+    padding: 5px 5px;
+}
+
+.dashboard .close-container-button {
+    padding: 0;
+    padding-right: 1em;
+}
+
+.dashboard .close-button {
+    font-size: 12px;
+    padding: 0.7em;
+}
+
+.dashboard .card-body .btn {
+    width: auto;
+}
+
+.dashboard .tableMovements {
+    font-size: 0.7em;
+}
+
+/* End Dashboard */
+
+.footer {
+    margin-top: 3em;
+    font-family: 'Open Sans';
+}
+
+.footer a {
+    color: #adacac;
+    font-size: 0.7em;
+}
+
+.numberHorse {
+    width: 50px;
+    text-align: center
+}
+
+/*http://www.painteddaisystudio.com/FlatRacing.html*/
+
+.horse-1,
+.horse-1A,
+.horse-1B,
+.horse-1C,
+.horse-1D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #fe0000;
+    border: 2px solid #fe0000;
+}
+
+.horse-2,
+.horse-2A,
+.horse-2B,
+.horse-2C,
+.horse-2D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    background: #fff;
+    border: 2px solid #000;
+}
+
+.horse-3,
+.horse-3A,
+.horse-3B,
+.horse-3C,
+.horse-3D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #1700fe;
+    border: 2px solid #1700fe;
+}
+
+.horse-4,
+.horse-4A,
+.horse-4B,
+.horse-4C,
+.horse-4D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    background: #feff05;
+    border: 2px solid #feff05;
+}
+
+.horse-5,
+.horse-5A,
+.horse-5B,
+.horse-5C,
+.horse-5D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #0e6224;
+    border: 2px solid #0e6224;
+}
+
+.horse-6,
+.horse-6A,
+.horse-6B,
+.horse-6C,
+.horse-6D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #feff01;
+    background: #000;
+    border: 2px solid #000;
+}
+
+.horse-7,
+.horse-7A,
+.horse-7B,
+.horse-7C,
+.horse-7D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    background: #ff4a0b;
+    border: 2px solid #ff4a0b;
+}
+
+.horse-8,
+.horse-8A,
+.horse-8B,
+.horse-8C,
+.horse-8D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    background: #f55084;
+    border: 2px solid #f55084;
+}
+
+.horse-9,
+.horse-9A,
+.horse-9B,
+.horse-9C,
+.horse-9D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    background: #03a0c7;
+    border: 2px solid #03a0c7;
+}
+
+.horse-10,
+.horse-10A,
+.horse-10B,
+.horse-10C,
+.horse-10D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #6f409c;
+    border: 2px solid #6f409c;
+}
+
+.horse-11,
+.horse-11A,
+.horse-11B,
+.horse-11C,
+.horse-11D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fe0000;
+    background: #adadad;
+    border: 2px solid #adadad;
+}
+
+.horse-12,
+.horse-12A,
+.horse-12B,
+.horse-12C,
+.horse-12D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #000;
+    background: #01ff00;
+    border: 2px solid #01ff00;
+}
+
+.horse-13,
+.horse-13A,
+.horse-13B,
+.horse-13C,
+.horse-13D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #3b0d0e;
+    border: 2px solid #3b0d0e;
+}
+
+.horse-14,
+.horse-14A,
+.horse-14B,
+.horse-14C,
+.horse-14D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #feff01;
+    background: #60061c;
+    border: 2px solid #60061c;
+}
+
+.horse-15,
+.horse-15A,
+.horse-15B,
+.horse-15C,
+.horse-15D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #ccc;
+    background: #989489;
+    border: 2px solid #989489;
+}
+
+.horse-16,
+.horse-16A,
+.horse-16B,
+.horse-16C,
+.horse-16D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fe0000;
+    background: #9fdbe9;
+    border: 2px solid #9fdbe9;
+}
+
+.horse-17,
+.horse-17A,
+.horse-17B,
+.horse-17C,
+.horse-17D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fff;
+    background: #08083a;
+    border: 2px solid #08083a;
+}
+
+.horse-18,
+.horse-18A,
+.horse-18B,
+.horse-18C,
+.horse-18D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #feff02;
+    background: #0a270d;
+    border: 2px solid #0a270d;
+}
+
+.horse-19,
+.horse-19A,
+.horse-19B,
+.horse-19C,
+.horse-19D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #fe0000;
+    background: #191c88;
+    border: 2px solid #191c88;
+}
+
+.horse-20,
+.horse-20A,
+.horse-20B,
+.horse-20C,
+.horse-20D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #feff01;
+    background: #f21965;
+    border: 2px solid #f21965;
+}
+
+.horse-21,
+.horse-21A,
+.horse-21B,
+.horse-21C,
+.horse-21D {
+    float: left;
+    width: 100%;
+    text-align: center;
+    color: #08083a;
+    background: #978ec3;
+    border: 2px solid #978ec3;
+}
+
+.horse-odd {
+    background: #0b1f35;
+    float: left;
+    width: 100%;
+    color: #fff;
+}
+
+.row.block-my-tickets {
+    padding: 1.2em;
+    font-size: 1em;
+}
+
+.form-text-units-direct {
+    width: 70px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.content-page-5y6 .content-tab {
+    padding: 1em 2em;
+}
+
+.content-page-5y6 .block-sell-form.sell-form-header {
+    background: #000;
+}
+
+.content-page-5y6 .block-sell-form.sell-form-header h3 {
+    color: #ffffff;
+    font-size: 2em;
+    padding-left: 5px;
+}
+
+.content-page-5y6 h1 {
+    font-size: 1.5em;
+    color: #000000 !important;
+}
+
+.content-page-5y6 h2 {
+    font-size: 1.2em;
+    color: #000000 !important;
+}
+
+.float-l {
+    float: left;
+}
+
+.horse-numbers-list {
+    width: 100%;
+    float: left;
+    margin: 0.5em 0;
+}
+
+.talign-center {
+    text-align: center;
+}
+
+.pd-2 {
+    padding: 2em;
+}
+
+.horse-numbers-list-title {
+    float: left;
+    margin-right: 5px;
+    color: #444;
+}
+
+.horse-numbers-list-item {
+    float: left;
+    margin-right: 5px;
+}
+
+@media print {
+    #app .container {
+        width: 100%;
+        background-color: #fff;
+        z-index: 10000000;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0
+    }
+
+    #wrapper {
+        width: 100%;
+        background-color: #fff;
+        z-index: 10000000;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0
+    }
+}
+
+/* Small only */
+@media screen and (max-width: 39.9375em) {}
+
+/* Medium only */
+@media screen and (min-width: 40em) and (max-width: 63.9375em) {
+    .md-mt-10 {
+        margin-top: 10px;
+    }
+}
+
+@media print {
+    .grecaptcha-badge {
+        visibility: hidden;
+    }
+}
+
+.container-filters-card {
+    padding: 1em;
+}
+
+.container-filters.card-body {
+    height: auto;
+}
+
+.container-filters .btn {
+    width: auto;
+    padding: 0.5em 1em;
+}
+
+.card-body .pagination-toolbar .btn {
+    width: auto;
+}
+
+.container-filters.card-body .btn {
+    width: auto;
+}

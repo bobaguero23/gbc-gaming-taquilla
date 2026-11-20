@@ -1,0 +1,131 @@
+.update-notifier-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    pointer-events: none;
+}
+
+.update-notifier-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    color: #fff;
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 14px;
+    pointer-events: auto;
+    animation: slideDown 0.4s ease-out;
+}
+
+.update-notifier-banner.downloading {
+    background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+.update-notifier-banner.downloaded {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+}
+
+.update-notifier-banner.error {
+    background: linear-gradient(135deg, #e53935, #b71c1c);
+}
+
+.update-notifier-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.update-notifier-icon {
+    font-size: 20px;
+}
+
+.update-notifier-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-notifier-title {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.update-notifier-detail {
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+/* Progress bar */
+.update-progress-container {
+    width: 200px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 0 16px;
+}
+
+.update-progress-bar {
+    height: 100%;
+    background: #fff;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Buttons */
+.update-notifier-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.update-btn {
+    padding: 6px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: 'Open Sans', Arial, sans-serif;
+}
+
+.update-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.update-btn-primary {
+    background: rgba(255, 255, 255, 0.9);
+    color: #1b5e20;
+    font-weight: 600;
+    border-color: transparent;
+}
+
+.update-btn-primary:hover {
+    background: #fff;
+}
+
+.update-btn-dismiss {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    padding: 4px 8px;
+    opacity: 0.7;
+}
+
+.update-btn-dismiss:hover {
+    opacity: 1;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

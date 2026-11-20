@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Taquilla Física</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            user-select: none;
+        }
+        .tab-bar {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            background: linear-gradient(135deg, #e8520e 0%, #f27830 50%, #e8520e 100%);
+            padding: 0 6px;
+            gap: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            color: rgba(255,255,255,0.85);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            max-width: 280px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 32px;
+        }
+        .tab:hover { background: rgba(255,255,255,0.3); color: #fff; }
+        .tab.active { background: #fff; color: #e8520e; font-weight: 700; border-color: rgba(0,0,0,0.08); }
+        .tab .type-badge {
+            font-size: 9px; font-weight: 700; padding: 1px 5px;
+            border-radius: 3px; letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .tab .type-badge.ganado { background: #27ae60; color: #fff; }
+        .tab .type-badge.inh { background: #2980b9; color: #fff; }
+        .tab .close-btn {
+            display: none; width: 16px; height: 16px; border-radius: 50%;
+            background: rgba(0,0,0,0.1); border: none; color: rgba(0,0,0,0.5);
+            font-size: 11px; cursor: pointer; flex-shrink: 0; padding: 0;
+        }
+        .tab:hover .close-btn { display: inline-flex; align-items: center; justify-content: center; }
+        .tab.active .close-btn { background: rgba(232,82,14,0.1); color: #e8520e; }
+        .tab .close-btn:hover { background: #c0392b; color: white; }
+        .tab-label { overflow: hidden; text-overflow: ellipsis; }
+        .toolbar-btn {
+            width: 26px; height: 26px; border-radius: 5px;
+            background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.35);
+            color: #fff; font-size: 14px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.15s ease; flex-shrink: 0; padding: 0;
+        }
+        .toolbar-btn:hover { background: rgba(255,255,255,0.45); transform: scale(1.05); }
+        .add-btn { font-size: 16px; font-weight: bold; line-height: 1; }
+        .empty-state { display: flex; align-items: center; color: rgba(255,255,255,0.8); font-size: 12px; padding: 0 8px; }
+        .spacer { flex: 1; }
+        /* Modal */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh; background: rgba(0,0,0,0.5);
+            z-index: 9999; justify-content: center; align-items: flex-start; padding-top: 60px;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal {
+            background: #fff; border-radius: 10px; padding: 24px; width: 420px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3); border-top: 4px solid #e8520e;
+        }
+        .modal h3 { color: #333; margin-bottom: 4px; font-size: 16px; }
+        .modal .subtitle { color: #888; font-size: 12px; margin-bottom: 16px; }
+        .modal input, .modal select {
+            width: 100%; padding: 10px 12px; border-radius: 6px;
+            border: 1px solid #ddd; background: #fafafa; color: #333;
+            font-size: 14px; outline: none; transition: border-color 0.2s;
+        }
+        .modal input:focus, .modal select:focus { border-color: #e8520e; background: #fff; }
+        .modal .btn-row { display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end; }
+        .modal button {
+            padding: 8px 20px; border-radius: 6px; border: none;
+            font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+        }
+        .modal .btn-primary { background: #e8520e; color: #fff; }
+        .modal .btn-primary:hover { background: #d04a0c; }
+        .modal .btn-secondary { background: #f0f0f0; color: #666; }
+        .modal .btn-secondary:hover { background: #e0e0e0; }
+        .modal .error-msg { color: #c0392b; font-size: 12px; margin-top: 6px; display: none; }
+        .modal .domain-help { margin-top: 12px; font-size: 11px; color: #999; }
+        .modal .domain-help span.pro { color: #27ae60; font-weight: 600; }
+        .modal .domain-help span.inh { color: #2980b9; font-weight: 600; }
+        .modal label { display: block; font-size: 13px; font-weight: 600; color: #555; margin-bottom: 6px; margin-top: 14px; }
+        .modal .printer-status { font-size: 11px; color: #999; margin-top: 4px; }
+        .modal .printer-status .current { color: #27ae60; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="tab-bar" id="tabBar">
+        <div class="empty-state" id="emptyState">Haga clic en + para agregar una agencia</div>
+        <div class="spacer"></div>
+        <button class="toolbar-btn" id="printerBtn" title="Configurar impresora">🖨</button>
+        <button class="toolbar-btn add-btn" id="addBtn" title="Agregar agencia">+</button>
+    </div>
+
+    <!-- Add Agency Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3>Agregar Agencia</h3>
+            <p class="subtitle">Ingrese la dirección web de la agencia</p>
+            <input type="text" id="hostInput" placeholder="Ejemplo: agencia.ejemplo.com">
+            <div class="error-msg" id="errorMsg">Dominio no válido (ej: agencia.taquillafisica.com)</div>
+            <div class="domain-help" id="domainHelp">
+                <span class="pro">.pro</span> = Venta a Ganador &nbsp;|&nbsp;
+                <span class="inh">.app .bet .com .io</span> = INH - 5 y 6
+            </div>
+            <div class="btn-row">
+                <button class="btn-secondary" id="cancelBtn">Cancelar</button>
+                <button class="btn-primary" id="confirmBtn">Agregar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printer Config Modal -->
+    <div class="modal-overlay" id="printerModalOverlay">
+        <div class="modal">
+            <h3>🖨 Configurar Impresora</h3>
+            <p class="subtitle">Seleccione la impresora para la agencia activa</p>
+            <div id="printerActiveAgency" style="font-size:13px; color:#e8520e; font-weight:600; margin-bottom:10px;"></div>
+            <label>Impresora</label>
+            <select id="printerSelect">
+                <option value="">-- Impresora por defecto del sistema --</option>
+            </select>
+            <div class="printer-status" id="printerStatus"></div>
+            <div class="btn-row">
+                <button class="btn-secondary" id="printerCancelBtn">Cancelar</button>
+                <button class="btn-primary" id="printerSaveBtn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        const tabBar = document.getElementById('tabBar');
+        const addBtn = document.getElementById('addBtn');
+        const printerBtn = document.getElementById('printerBtn');
+        const emptyState = document.getElementById('emptyState');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const hostInput = document.getElementById('hostInput');
+        const errorMsg = document.getElementById('errorMsg');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
+        // Printer modal
+        const printerModalOverlay = document.getElementById('printerModalOverlay');
+        const printerSelect = document.getElementById('printerSelect');
+        const printerActiveAgency = document.getElementById('printerActiveAgency');
+        const printerStatus = document.getElementById('printerStatus');
+        const printerCancelBtn = document.getElementById('printerCancelBtn');
+        const printerSaveBtn = document.getElementById('printerSaveBtn');
+
+        let agencies = [];
+        let activeAgency = null;
+        let gbcProduct = false;
+
+        const allowedDomainsRegex = /^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+        const gbcHostRegex = /^(?=.{1,253}$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+
+        function applyProduct(info) {
+            gbcProduct = !!(info && info.gbc);
+            if (info && info.title) document.title = info.title;
+            const help = document.getElementById('domainHelp');
+            const input = document.getElementById('hostInput');
+            if (gbcProduct && help) {
+                help.textContent = 'Host de la agencia GBC Gaming. Esta taquilla vende sólo Ganador.';
+            }
+            if (gbcProduct && input) {
+                input.placeholder = 'Ejemplo: agencia.ejemplo.com';
+            }
+            renderTabs();
+        }
+
+        function getAgencyType(hostname) {
+            if (gbcProduct) {
+                return { type: 'ganado', label: 'GANADOR' };
+            }
+            if (hostname.includes('.pro')) {
+                return { type: 'ganado', label: 'GANADOR' };
+            }
+            return { type: 'inh', label: 'INH-5y6' };
+        }
+
+        function getAgencyDisplayName(hostname) {
+            const parts = hostname.split('.');
+            return parts.length > 1 ? parts[0] : hostname;
+        }
+
+        function renderTabs() {
+            document.querySelectorAll('.tab').forEach(t => t.remove());
+            emptyState.style.display = agencies.length === 0 ? 'flex' : 'none';
+
+            const spacer = tabBar.querySelector('.spacer');
+
+            agencies.forEach(hostname => {
+                const tab = document.createElement('div');
+                tab.className = 'tab' + (hostname === activeAgency ? ' active' : '');
+                
+                const name = getAgencyDisplayName(hostname);
+                const { type, label } = getAgencyType(hostname);
+
+                tab.innerHTML = `
+                    <span class="type-badge ${type}">${label}</span>
+                    <span class="tab-label" title="${hostname}">${name}</span>
+                    <button class="close-btn" data-host="${hostname}">×</button>
+                `;
+
+                tab.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('close-btn')) {
+                        ipcRenderer.send('switch-agency', hostname);
+                    }
+                });
+
+                tab.querySelector('.close-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    ipcRenderer.send('remove-agency', hostname);
+                });
+
+                tabBar.insertBefore(tab, spacer);
+            });
+        }
+
+        // ── Add Agency Modal ──
+        function showModal() {
+            ipcRenderer.send('show-modal');
+            modalOverlay.classList.add('show');
+            hostInput.value = '';
+            errorMsg.style.display = 'none';
+            setTimeout(() => hostInput.focus(), 100);
+        }
+
+        function hideModal() {
+            modalOverlay.classList.remove('show');
+            ipcRenderer.send('hide-modal');
+        }
+
+        function validateAndAdd() {
+            let host = hostInput.value.trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+            const validHost = gbcProduct ? gbcHostRegex.test(host) : allowedDomainsRegex.test(host);
+            if (!host || !validHost) {
+                errorMsg.style.display = 'block';
+                return;
+            }
+            ipcRenderer.send('add-agency', host);
+            hideModal();
+        }
+
+        addBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showModal();
+        });
+        cancelBtn.addEventListener('click', hideModal);
+        confirmBtn.addEventListener('click', validateAndAdd);
+        hostInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') validateAndAdd();
+            if (e.key === 'Escape') hideModal();
+        });
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) hideModal();
+        });
+
+        // ── Printer Config Modal ──
+        async function showPrinterModal() {
+            if (!activeAgency) return;
+            ipcRenderer.send('show-modal');
+            printerModalOverlay.classList.add('show');
+
+            const { type, label } = getAgencyType(activeAgency);
+            printerActiveAgency.textContent = `${label} — ${activeAgency}`;
+
+            // Load available printers
+            const printers = await ipcRenderer.invoke('get-printers');
+            printerSelect.innerHTML = '<option value="">-- Impresora por defecto del sistema --</option>';
+            printers.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.name;
+                opt.textContent = p.name + (p.isDefault ? ' (por defecto)' : '');
+                printerSelect.appendChild(opt);
+            });
+
+            // Load saved config
+            const savedPrinter = await ipcRenderer.invoke('get-printer', activeAgency);
+            if (savedPrinter) {
+                printerSelect.value = savedPrinter;
+                printerStatus.innerHTML = `Impresora configurada: <span class="current">${savedPrinter}</span>`;
+            } else {
+                printerStatus.innerHTML = 'Usando la impresora por defecto del sistema';
+            }
+        }
+
+        function hidePrinterModal() {
+            printerModalOverlay.classList.remove('show');
+            ipcRenderer.send('hide-modal');
+        }
+
+        printerBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            showPrinterModal();
+        });
+
+        printerCancelBtn.addEventListener('click', hidePrinterModal);
+
+        printerSaveBtn.addEventListener('click', () => {
+            if (!activeAgency) return;
+            const printerName = printerSelect.value;
+            ipcRenderer.send('set-printer', { hostname: activeAgency, printerName });
+            hidePrinterModal();
+        });
+
+        printerModalOverlay.addEventListener('click', (e) => {
+            if (e.target === printerModalOverlay) hidePrinterModal();
+        });
+
+        // ── IPC Listeners ──
+        ipcRenderer.on('product-info', (event, data) => {
+            applyProduct(data);
+        });
+
+        ipcRenderer.on('agencies-updated', (event, data) => {
+            agencies = data.agencies;
+            activeAgency = data.active;
+            renderTabs();
+        });
+
+        ipcRenderer.on('active-agency-changed', (event, hostname) => {
+            activeAgency = hostname;
+            renderTabs();
+        });
+
+        ipcRenderer.on('show-add-agency', () => {
+            showModal();
+        });
+
+        ipcRenderer.send('get-product');
+        ipcRenderer.send('get-agencies');
+    </script>
+</body>
+</html>

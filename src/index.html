@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- Bootstrap and Google Fonts are now bundled locally via JS imports -->
+    <script>
+        window.onerror = function (message, source, lineno, colno, error) {
+            alert('Error: ' + message + '\nSource: ' + source + '\nLine: ' + lineno);
+        };
+    </script>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>

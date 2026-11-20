@@ -29,6 +29,7 @@ let mainWindow;
 let activeViews = {}; // { hostname: BrowserView }
 let activeHostname = null;
 let gbcStartUrl = null;
+const corsPatchedPartitions = new Set();
 
 function contentTypeFor(filePath) {
     if (filePath.endsWith('.html')) return 'text/html; charset=utf-8';
@@ -156,14 +157,71 @@ function sendToRenderer(channel, data) {
 const TAB_BAR_HEIGHT = 40;
 
 function getContentBounds() {
-    if (!mainWindow) return { x: 0, y: 0, width: 1366, height: 728 };
-    const bounds = mainWindow.getContentBounds();
+    if (!mainWindow || mainWindow.isDestroyed()) {
+        return { x: 0, y: TAB_BAR_HEIGHT, width: 1366, height: 728 - TAB_BAR_HEIGHT };
+    }
+    // getContentSize is the client area. getContentBounds().width can lag during
+    // resize and, combined with setAutoResize, left the view stuck on the left.
+    const [width, height] = mainWindow.getContentSize();
     return {
         x: 0,
         y: TAB_BAR_HEIGHT,
-        width: bounds.width,
-        height: bounds.height - TAB_BAR_HEIGHT
+        width,
+        height: Math.max(0, height - TAB_BAR_HEIGHT)
     };
+}
+
+function layoutActiveViews() {
+    if (!mainWindow || mainWindow.isDestroyed()) return;
+    const bounds = getContentBounds();
+    Object.values(activeViews).forEach((view) => {
+        try {
+            if (view && view.webContents && !view.webContents.isDestroyed()) {
+                view.setBounds(bounds);
+            }
+        } catch (e) { /* view might be destroyed */ }
+    });
+}
+
+let layoutScheduled = false;
+function scheduleLayoutActiveViews() {
+    if (layoutScheduled) return;
+    layoutScheduled = true;
+    setImmediate(() => {
+        layoutScheduled = false;
+        layoutActiveViews();
+    });
+}
+
+// The packaged UI is http://localhost so reCAPTCHA has an origin. Chromium then
+// enforces CORS. The shared API answers Access-Control-Allow-Origin: * but its
+// Allow-Headers list omits x-taquilla-client (and the cache headers this
+// session adds). The preflight fails and axios reports a network error.
+// file:// (INH) never hits that check. Patch only the BetPredator responses.
+function isBetpredatorApi(url) {
+    try {
+        const host = new URL(url).hostname.toLowerCase();
+        return host.endsWith('.betpredator.com') || host.endsWith('.betpredator.io');
+    } catch (e) {
+        return false;
+    }
+}
+
+function corsHeadersForApi(responseHeaders) {
+    const headers = Object.assign({}, responseHeaders || {});
+    Object.keys(headers).forEach((key) => {
+        const name = key.toLowerCase();
+        if (name === 'access-control-allow-origin'
+            || name === 'access-control-allow-headers'
+            || name === 'access-control-allow-methods'
+            || name === 'access-control-allow-credentials') {
+            delete headers[key];
+        }
+    });
+    headers['Access-Control-Allow-Origin'] = ['*'];
+    headers['Access-Control-Allow-Headers'] = ['sessionId, Content-Type, authorization, x-taquilla-client, Cache-Control, Pragma, Accept, Origin'];
+    headers['Access-Control-Allow-Methods'] = ['GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS'];
+    return headers;
 }
 
 // ── BrowserView Management ──────────────────────────────────────────
@@ -193,8 +251,20 @@ function createViewForHostname(hostname) {
         callback({ requestHeaders: details.requestHeaders });
     });
 
+    if (isGbcProduct() && !corsPatchedPartitions.has(partitionName)) {
+        corsPatchedPartitions.add(partitionName);
+        ses.webRequest.onHeadersReceived({ urls: ['*://*.betpredator.com/*', '*://*.betpredator.io/*'] }, (details, callback) => {
+            if (!isBetpredatorApi(details.url)) {
+                callback({ responseHeaders: details.responseHeaders });
+                return;
+            }
+            callback({ responseHeaders: corsHeadersForApi(details.responseHeaders) });
+        });
+    }
+
     view.setBounds(getContentBounds());
-    view.setAutoResize({ width: true, height: true });
+    // Manual layout below. setAutoResize keeps the old width when the window
+    // grows and the login form stays on the left of the white area.
 
     // Load the app and set the SELECTED_HOST in the partition's localStorage
     view.webContents.loadURL(startUrl).then(() => {
@@ -322,11 +392,8 @@ function createWindow() {
         activeHostname = null;
     });
 
-    mainWindow.on('resize', () => {
-        // Update all view bounds on resize
-        Object.values(activeViews).forEach(view => {
-            view.setBounds(getContentBounds());
-        });
+    ['resize', 'resized', 'maximize', 'unmaximize', 'enter-full-screen', 'leave-full-screen'].forEach((eventName) => {
+        mainWindow.on(eventName, scheduleLayoutActiveViews);
     });
 
     // After the tab bar loads, initialize views for saved agencies

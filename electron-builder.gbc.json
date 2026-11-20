@@ -71,6 +71,7 @@
     }
   ],
   "win": {
+    "icon": "public/app-icon.png",
     "target": ["nsis"]
   },
   "nsis": {

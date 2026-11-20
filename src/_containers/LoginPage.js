@@ -245,10 +245,12 @@ class LoginPage extends React.Component {
       otherLogin = true;
     }
 
+    const gbcLogin = isGbcGaming();
+
     return (
-      <div className="container" style={{ padding: '8em' }}>
+      <div className={gbcLogin ? 'gbc-login-screen' : 'container'} style={gbcLogin ? undefined : { padding: '8em' }}>
         <div className="row justify-content-center">
-          <div className="col-4 text-center mb-4">
+          <div className={gbcLogin ? 'gbc-login-card text-center mb-4' : 'col-4 text-center mb-4'}>
             {appConfig.logo ? (
               <Image src={appConfig.logo} className="loginLogo" />
             ) : (
@@ -266,7 +268,7 @@ class LoginPage extends React.Component {
             Ha fallado la verificación del captcha. Refrescando..
           </Alert>
         )}
-        <div className="row">
+        <div className={gbcLogin ? 'row justify-content-center' : 'row'}>
           {!isGbcGaming() ? (
           <div className="col-md-6 border-right" style={{ padding: '4em' }}>
             {otherLogin ? (
@@ -341,7 +343,7 @@ class LoginPage extends React.Component {
             )}
           </div>
           ) : null}
-          <div className={isGbcGaming() ? 'col-md-6 offset-md-3' : 'col-md-6'} style={{ padding: '4em' }}>
+          <div className={gbcLogin ? 'gbc-login-card' : 'col-md-6'} style={gbcLogin ? undefined : { padding: '4em' }}>
             <ValidatorForm ref="form" onSubmit={this.handleSubmitUserPass}>
               <div className="form-group">
                 <TextValidator

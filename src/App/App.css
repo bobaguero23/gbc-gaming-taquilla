@@ -200,6 +200,50 @@ div#wrapper {
     padding: 2em;
 }
 
+/* GBC: the bootstrap column stayed on the left once the window grew. */
+#app .container.dashboard:has(.gbc-login-screen) {
+    max-width: none;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border: none;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#app .gbc-login-screen {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4em 1.5em 1em;
+    box-sizing: border-box;
+}
+
+#app .gbc-login-screen > .row {
+    width: 100%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+#app .gbc-login-card {
+    width: 100%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    float: none;
+}
+
+#app .container.dashboard:has(.gbc-login-screen) > footer {
+    width: 100%;
+    text-align: center;
+}
+
 .logo-content {
     border-bottom: 4px solid #f8f9fa;
 }

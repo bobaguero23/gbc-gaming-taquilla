@@ -1,7 +1,19 @@
 import config from 'config';
 
+function agencyCode(value) {
+    const host = String(value || '').trim().toLowerCase();
+    if (!host || host === 'localhost' || host === '127.0.0.1') return '';
+    return host;
+}
+
 export const getDynamicConfig = () => {
-    const selectedHost = localStorage.getItem('SELECTED_HOST');
+    const fromUrl = agencyCode(new URLSearchParams(window.location.search).get('agency'));
+    const storedHost = agencyCode(localStorage.getItem('SELECTED_HOST'));
+    const selectedHost = fromUrl || storedHost;
+
+    if (fromUrl && localStorage.getItem('SELECTED_HOST') !== fromUrl) {
+        localStorage.setItem('SELECTED_HOST', fromUrl);
+    }
 
     if (!selectedHost) {
         return {

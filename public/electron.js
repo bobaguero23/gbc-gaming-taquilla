@@ -226,10 +226,18 @@ function corsHeadersForApi(responseHeaders) {
 
 // ── BrowserView Management ──────────────────────────────────────────
 
-function createViewForHostname(hostname) {
-    const startUrl = isDev
+function viewStartUrl(hostname) {
+    const base = isDev
         ? 'http://localhost:8080'
         : (gbcStartUrl || `file://${path.join(__dirname, '../dist/index.html')}`);
+    if (!isGbcProduct()) return base;
+    const url = new URL(base);
+    url.searchParams.set('agency', hostname);
+    return url.toString();
+}
+
+function createViewForHostname(hostname) {
+    const startUrl = viewStartUrl(hostname);
 
     const partitionName = `persist:${hostname}`;
 
@@ -266,14 +274,25 @@ function createViewForHostname(hostname) {
     // Manual layout below. setAutoResize keeps the old width when the window
     // grows and the login form stays on the left of the white area.
 
-    // Load the app and set the SELECTED_HOST in the partition's localStorage
+    // The page is served from localhost. Always pin the agency code, even when
+    // an older session stored SELECTED_HOST as localhost.
     view.webContents.loadURL(startUrl).then(() => {
-        view.webContents.executeJavaScript(`
-            if (!localStorage.getItem('SELECTED_HOST')) {
-                localStorage.setItem('SELECTED_HOST', '${hostname}');
-                window.location.reload();
-            }
-        `);
+        const hostLiteral = JSON.stringify(hostname);
+        const script = isGbcProduct()
+            ? `(function () {
+                var host = ${hostLiteral};
+                if (localStorage.getItem('SELECTED_HOST') !== host) {
+                    localStorage.setItem('SELECTED_HOST', host);
+                    window.location.reload();
+                }
+            })();`
+            : `(function () {
+                if (!localStorage.getItem('SELECTED_HOST')) {
+                    localStorage.setItem('SELECTED_HOST', ${hostLiteral});
+                    window.location.reload();
+                }
+            })();`;
+        view.webContents.executeJavaScript(script);
     });
 
     // ── Silent Printing: intercept window.print() ──

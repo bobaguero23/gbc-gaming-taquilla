@@ -4,7 +4,6 @@ import config from 'config';
 import jwtDecode from 'jwt-decode';
 
 import { getDynamicConfig } from './dynamicConfig';
-import { isGbcGaming } from './product';
 import QueryCache from './queryCache';
 
 export default class HandlerGraph {
@@ -19,10 +18,9 @@ export default class HandlerGraph {
       'Content-Type': 'application/json',
     };
 
-    if (isGbcGaming()) {
-      headers['x-taquilla-client'] = 'gbc';
-    }
-
+    // GBC identifies itself with a real reCAPTCHA sessionId, not a custom
+    // header. The seller API only allows sessionId, Content-Type and
+    // authorization on CORS, so an extra header makes Chromium drop the POST.
     if (empty(localStorage.getItem('token'))) {
       headers.sessionId = localStorage.getItem('recaptcha');
     }

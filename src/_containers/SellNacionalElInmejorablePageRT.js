@@ -349,6 +349,8 @@ class SellNacionalElInmejorablePageRT extends React.Component {
                 !empty(data.allTracks) &&
                 !empty(data.allTracks.nodes) ? (
                   <SellNacionalElInmejorablePage tracks={data.allTracks.nodes} {...this.props} updateTracksId={this.updateTracksId} trackSelected={trackSelected} currencyCode ={currency_code}/>
+                ) : isGbcGaming() ? (
+                  <SellNacionalElInmejorablePage tracks={[]} {...this.props} updateTracksId={this.updateTracksId} trackSelected={trackSelected} currencyCode ={currency_code}/>
                 ) : (
                   <div className="messageError">
                     <p>Ya existe una sesión activa, si desea utilizar esta pantalla refresca la misma</p>

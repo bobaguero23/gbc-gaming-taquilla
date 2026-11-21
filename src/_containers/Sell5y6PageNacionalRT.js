@@ -25,7 +25,7 @@ class Sell5y6NacionalPageRT extends React.Component {
     filter:{
       deleted: {equalTo:false }
       enabled: {equalTo:true}
-      enabledTrack: {equalTo:true}    
+      enabledBetpredator: {equalTo:true}    
       id : { in: ["9101","9102","9100","${demoTrack}"] }
     } 
   ){

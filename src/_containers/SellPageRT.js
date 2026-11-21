@@ -18,7 +18,7 @@ class SellPageRT extends React.Component {
         centers_id=135;
       }
       
-        let enabled = 'enabledTrack: {equalTo:true}';
+        let enabled = 'enabledBetpredator: {equalTo:true}';
         let trackId = (!empty(trackSelected) ? `id : { in: ["${trackSelected}"] }` : null );
         let query = '';
       

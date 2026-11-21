@@ -15,7 +15,7 @@ class SellNacionalPageRT extends React.Component {
     getTracks = ({centers_id,currency_code, trackSelected} = {centers_id,currency_code,trackSelected}) =>{
         
         
-        let enabled = 'enabledTrack: {equalTo:true}';
+        let enabled = 'enabledBetpredator: {equalTo:true}';
         let trackId = (!empty(trackSelected) && trackSelected > 0 ? `id : { in: ["${trackSelected}"] }` : 'id : { in: ["9101","9102","9100"] }' );
         let query = '';
 

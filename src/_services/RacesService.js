@@ -20,7 +20,7 @@ class RacesService {
                       equalTo:"_today"
                 }
                 trackByTracksId: {
-                  enabledTrack: {
+                  enabledBetpredator: {
                     equalTo: true
                   }
                 }
@@ -36,7 +36,7 @@ class RacesService {
               id
               trackName
               enabledCustomers
-              enabledTrack
+              enabledBetpredator
             }
             
           }
@@ -67,7 +67,7 @@ class RacesService {
                     greaterThanOrEqualTo:"_today"
                 }
                 trackByTracksId: {
-                  enabledTrack: {
+                  enabledBetpredator: {
                     equalTo: true
                   }
                   id:{
@@ -86,7 +86,7 @@ class RacesService {
               id
               trackName
               enabledCustomers
-              enabledTrack
+              enabledBetpredator
             }
             
           }

@@ -641,7 +641,7 @@ class SellService {
 
   static allTracks = async() => {
 
-    let enabled = 'enabledTrack:true';
+    let enabled = 'enabledBetpredator:true';
     let query = `query{
         allTracks(
           condition:{
@@ -882,7 +882,7 @@ class SellService {
         allTracks(
           condition:{
             deleted:false
-            enabledTrack:true
+            enabledBetpredator:true
             }        
           filter:
           {

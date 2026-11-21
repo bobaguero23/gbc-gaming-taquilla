@@ -18,7 +18,7 @@ class NextRaces extends React.Component {
 
       if(ticket_offices_id == 193){
 
-        if(race.trackByTracksId.enabledTrack){
+        if(race.trackByTracksId.enabledBetpredator){
           result.push(race);
         }
 
